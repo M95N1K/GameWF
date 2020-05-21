@@ -119,6 +119,8 @@ namespace GameWF
                 OnFire();
             else if (e.KeyCode == Keys.Escape)
                 Application.Exit();
+
+
         }
 
 
