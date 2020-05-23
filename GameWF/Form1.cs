@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
+// Выполнил Виль В. В.
 namespace GameWF
 {
     public partial class GamePolygon : Form
@@ -164,7 +159,7 @@ namespace GameWF
             civil1.SetRectangle(Left, Top, Height, Width);
         }
 
-        private void InitTorpeda() 
+        private void InitTorpeda()
         {
             torpeda = new BatleShip();
             torp.Enabled = false;
