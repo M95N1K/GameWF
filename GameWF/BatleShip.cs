@@ -19,7 +19,8 @@ namespace GameWF
             get { return box.Y; }
             set { 
                 box.Y = value;
-                OnResize();
+                if (!(OnResize is null))
+                    OnResize();
             }
         }
         public int Left
@@ -28,7 +29,8 @@ namespace GameWF
             set
             {
                 box.X = value;
-                OnResize();
+                if (!(OnResize is null))
+                    OnResize();
             }
         }
         public int Height
@@ -37,7 +39,8 @@ namespace GameWF
             set
             {
                 box.Height = value;
-                OnResize();
+                if (!(OnResize is null))
+                    OnResize();
             }
         }
         public int Width
@@ -46,7 +49,8 @@ namespace GameWF
             set
             {
                 box.Width = value;
-                OnResize();
+                if (!(OnResize is null))
+                    OnResize();
             }
         }
         //public string Tag;
@@ -68,15 +72,15 @@ namespace GameWF
         /// </summary>
         /// <param name="value">Объект с которым проверяется пересечение</param>
         /// <returns></returns>
-        public bool IsIntersection(BatleShip value)
+        public void IsIntersection(BatleShip value)
         {
             if (box.IntersectsWith(value.box))
             {
-                value.OnHit();
-                this.OnHit();
-                return true;
+                if (!(value.OnHit is null))
+                    value.OnHit();
+                if (!(this.OnHit is null))
+                    this.OnHit();
             }
-            return false;
         }
     }
 }

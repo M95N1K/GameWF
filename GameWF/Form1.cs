@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
+// Выполнил Виль В. В.
 namespace GameWF
 {
     public partial class GamePolygon : Form
@@ -19,33 +14,13 @@ namespace GameWF
         {
             InitializeComponent();
 
-            playerShip = new BatleShip();
-            shipPlayer.Text = "";
-            shipPlayer.BackColor = Color.White;
-            playerShip.OnResize += playerShip_OnResize;
-            playerShip.SetRectangle(Size.Width / 2, Size.Height - 90, 50, 25);
-
-            military1 = new BatleShip();
-            military1.OnResize += Military1_OnResize;
-            military1.OnHit += Military1_OnHit;
-            military1.SetRectangle(10, 20, 30, 55);
-
-            military2 = new BatleShip();
-            military2.OnResize += Military2_OnResize;
-            military2.OnHit += Military2_OnHit;
-            military2.SetRectangle(Size.Width, 95, 30, 55);
-
-            civil1 = new BatleShip();
-            civil1.OnHit += Civil1_OnHit;
-            civil1.OnResize += Civil1_OnResize;
-            civil1.SetRectangle(Size.Width, 150, 30, 55);
-
-            torpeda = new BatleShip();
-            torp.Enabled = false;
-            torpeda.OnResize += Torpeda_OnResize;
-            torpeda.OnHit += Torpeda_OnHit;
-
+            InitPlayerShip(Size.Width / 2, Size.Height - 90, 50, 25);
+            InitEnemy1Ship(10, 20, 30, 55);
+            InitEnemy2Ship(Size.Width, 95, 30, 55);
+            InitCivilShip(Size.Width, 150, 30, 55);
+            InitTorpeda();
         }
+        #region Автоматически сгенерированные методы
 
         private void Civil1_OnResize()
         {
@@ -121,8 +96,6 @@ namespace GameWF
                 Application.Exit();
         }
 
-
-
         private void Torpeda_OnHit()
         {
             fire = false;
@@ -140,32 +113,94 @@ namespace GameWF
 
         private void enemyTimer_Tick(object sender, EventArgs e)
         {
-            
-            military1.Left += 10;
+
+            M1Move(10);
+            M2Move(5);
+            CivilMove(7);
+            TorpedaMove(10);
+
+            military1.IsIntersection(torpeda);
+            military2.IsIntersection(torpeda);
+            civil1.IsIntersection(torpeda);
+        }
+        #endregion
+
+        #region Методы написанные мной
+        private void InitPlayerShip(int Left, int Top, int Height, int Width)
+        {
+            playerShip = new BatleShip();
+            shipPlayer.Text = "";
+            shipPlayer.BackColor = Color.White;
+            playerShip.OnResize += playerShip_OnResize;
+            playerShip.SetRectangle(Left, Top, Height, Width);
+        }
+
+        private void InitEnemy1Ship(int Left, int Top, int Height, int Width)
+        {
+            military1 = new BatleShip();
+            military1.OnResize += Military1_OnResize;
+            military1.OnHit += Military1_OnHit;
+            military1.SetRectangle(Left, Top, Height, Width);
+        }
+
+        private void InitEnemy2Ship(int Left, int Top, int Height, int Width)
+        {
+            military2 = new BatleShip();
+            military2.OnResize += Military2_OnResize;
+            military2.OnHit += Military2_OnHit;
+            military2.SetRectangle(Left, Top, Height, Width);
+        }
+
+        private void InitCivilShip(int Left, int Top, int Height, int Width)
+        {
+            civil1 = new BatleShip();
+            civil1.OnHit += Civil1_OnHit;
+            civil1.OnResize += Civil1_OnResize;
+            civil1.SetRectangle(Left, Top, Height, Width);
+        }
+
+        private void InitTorpeda()
+        {
+            torpeda = new BatleShip();
+            torp.Enabled = false;
+            torpeda.OnResize += Torpeda_OnResize;
+            torpeda.OnHit += Torpeda_OnHit;
+        }
+
+        private void M1Move(int step)
+        {
+            military1.Left += step;
             if (military1.Left >= Size.Width)
                 military1.Left = 0 - military1.Width;
-            military2.Left -= 5;
+        }
+
+        private void M2Move(int step)
+        {
+            military2.Left -= step;
             if (military2.Left <= -military2.Width)
                 military2.Left = Size.Width;
+        }
 
-            if (leftmove) 
-                civil1.Left += 7;
-            else 
-                civil1.Left -= 7;
-
+        private void CivilMove(int step)
+        {
+            if (leftmove)
+                civil1.Left += step;
+            else
+                civil1.Left -= step;
             if (civil1.Left >= Size.Width - civil1.Width)
                 leftmove = false;
             else if (civil1.Left <= 0)
                 leftmove = true;
+        }
+
+        private void TorpedaMove(int step)
+        {
             if (fire)
             {
-                torpeda.Top -= 10;
+                torpeda.Top -= step;
                 if (torpeda.Top <= 0)
                     Torpeda_OnHit();
             }
-            military1.IsIntersection(torpeda);
-            military2.IsIntersection(torpeda);
-            civil1.IsIntersection(torpeda);
         }
 
         private void OnFire()
@@ -174,5 +209,6 @@ namespace GameWF
             torp.Visible = true;
             fire = true;
         }
+        #endregion
     }
 }
